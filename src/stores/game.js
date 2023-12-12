@@ -212,9 +212,7 @@ export const useGameStore = defineStore('game', {
       this.players.sort((player, opponent) => player.pNum - opponent.pNum);
     },
     successfullyJoined(player) {
-      // Add player, sort by pNum
       this.players.push(cloneDeep(player));
-      this.players.sort((player, opponent) => player.pNum - opponent.pNum);
     },
     resetState() {
       this.$reset();
@@ -227,9 +225,6 @@ export const useGameStore = defineStore('game', {
       }
     },
     opponentLeft() {
-      const opponentPnum = this.opponent.pNum;
-      this[`p${opponentPnum}Ready`] = false;
-
       this.players = this.players.filter((player) => player.pNum === this.myPNum);
     },
     // Game Over
@@ -339,7 +334,7 @@ export const useGameStore = defineStore('game', {
               this.myPNum = res.pNum;
               this.updateGame(res.game);
               this.successfullyJoined({
-                username: res.username,
+                username: res.playerUsername,
                 pNum: res.pNum,
               });
               return resolve();

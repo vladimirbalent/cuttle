@@ -747,7 +747,7 @@ describe('Creating And Updating Ranked Matches With Rematch', () => {
     cy.loginPlayer(playerOne);
     cy.setupGameAsP0(true, true);
   });
-  
+
   it('Creates a match when two players play a ranked game for the first time this week, finish the match with rematch', function () {
     // There should be two matches initially (one from last week and one with a different opponent)
     cy.request('http://localhost:1337/match').then((res) => {
@@ -863,7 +863,7 @@ describe('Creating And Updating Ranked Matches With Rematch', () => {
     // Opponent confirms
     cy.stalemateOpponent();
     assertStalemate();
-    
+
     cy.window()
       .its('cuttle.gameStore')
       .then((game) => {
@@ -941,7 +941,7 @@ describe('Creating And Updating Ranked Matches With Rematch', () => {
       });
     });
   });
-  
+
   it('Creates a match when two players play a ranked game for the first time this week, leave game during rematch', function () {
     // There should be two matches initially (one from last week and one with a different opponent)
     cy.request('http://localhost:1337/match').then((res) => {
@@ -972,7 +972,7 @@ describe('Creating And Updating Ranked Matches With Rematch', () => {
 
     cy.url().should('not.include', '/game');
   });
-  
+
   it('Disables the rematch button in the GameOverDialog when opponent declines a rematch before the player makes a choice', function () {
     // There should be two matches initially (one from last week and one with a different opponent)
     cy.request('http://localhost:1337/match').then((res) => {
@@ -1013,7 +1013,7 @@ describe('Creating And Updating Unranked Matches With Rematch', () => {
     cy.loginPlayer(playerOne);
     cy.setupGameAsP0(true, false);
   });
-  
+
   it('Unranked games with rematch', function () {
     // 1st game: Opponent concedes
     cy.concedeOpponent();
@@ -1125,5 +1125,42 @@ describe('Creating And Updating Unranked Matches With Rematch', () => {
         cy.rematchAndJoinRematchOpponent({ gameId: game.id });
       });
     cy.url().should('include', '/game');
+  });
+
+  it('Unranked games rematch, reauthenticate', function () {
+    // 1st game: Opponent concedes
+    cy.concedeOpponent();
+    assertVictory();
+    cy.window()
+        .its('cuttle.authStore')
+        .then((store) => {
+          store.authenticated = false;
+        });
+    cy.get('[data-cy=gameover-rematch]').click();
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          const { p0Rematch } = game;
+          const { p1Rematch } = game;
+
+          cy.expect(p0Rematch).to.eq(true);
+          cy.expect(p1Rematch).to.eq(null);
+        });
+    cy.get('#waiting-for-game-to-start-scrim').should('be.visible');
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          cy.rematchAndJoinRematchOpponent({ gameId: game.id });
+        });
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          const { p0Rematch } = game;
+          const { p1Rematch } = game;
+
+          cy.expect(p0Rematch).to.eq(true);
+          cy.expect(p1Rematch).to.eq(null);
+          cy.log('game data is correct after first game');
+        });
   });
 });

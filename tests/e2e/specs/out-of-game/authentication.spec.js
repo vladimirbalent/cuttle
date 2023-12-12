@@ -165,4 +165,50 @@ describe('Signing Up', () => {
     assertFailedAuth('#/signup');
     assertSnackbarError('That username is already registered to another user; try logging in!', 'auth');
   });
+
+  describe('Show reauthenticate dialog', () => {
+    beforeEach(() => {
+      cy.setupGameAsP0();
+    });
+
+    it('Sow reauthenticate dialog', () => {
+      cy.clearCookies();
+      cy.reload();
+      cy.wait(5000)
+      cy.get('[data-cy=password]').should('be.visible');
+    });
+
+    it('Reauthenticate dialog error', () => {
+      cy.clearCookies();
+      cy.reload();
+      cy.wait(5000)
+      cy.get('[data-cy=password]').should('be.visible');
+
+      cy.get('[data-cy=password]').type("wrongpassword");
+      cy.get('[data-cy=username]').type(myUser.username + '{enter}');
+
+      cy.get('[data-cy=snackbar]').should('be.visible');
+    });
+
+    it('Reauthenticate dialog success', () => {
+      cy.clearCookies();
+
+      cy.vueRoute('/');
+
+      cy.window()
+          .its('cuttle.authStore')
+          .then((store) => {
+            store.mustReauthenticate = true;
+          });
+
+      cy.window()
+          .its('cuttle.gameStore')
+          .then((store) => {
+            cy.vueRoute('/game/' + store.id);
+          });
+
+      cy.get('[data-cy=password]').type(myUser.password + '{enter}');
+      cy.get('[data-cy=password]').should('not.be.visible');
+    });
+  });
 });

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BaseDialog id="reauthenticate-dialog" v-model="show" :title="t('game.dialogs.reauthentication.reconnectToGame')">
+    <BaseDialog id="reauthenticate-dialog" v-model="show" :title="t('game.dialogs.reauthentication.reconnectToGame')" data-cy="snackbar">
       <template #body>
         <p class="mb-4">
           {{ t('game.dialogs.reauthentication.youHaveDisconnected') }}

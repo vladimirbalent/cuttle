@@ -29,14 +29,14 @@
               <v-row v-for="i in 2" :key="`gamelistSkeleton${i}`" class="list-item py-2 ma-0 align-center">
                 <v-col lg="6" cols="12" class="list-item__inner-text pb-0 ma-0 mb-2 mb-lg-3">
                   <v-skeleton-loader
-                    class="pa-0" 
+                    class="pa-0"
                     type="text"
                     max-width="160"
                     color="surface-2"
                     height="30"
                   />
                   <v-skeleton-loader
-                    class="pa-0" 
+                    class="pa-0"
                     type="text"
                     max-width="130"
                     color="surface-2"
@@ -45,7 +45,7 @@
                 </v-col>
                 <v-col lg="6" cols="12" class="list-item__button mx-auto pa-0">
                   <v-skeleton-loader
-                    class="py-0 pl-0 pr-2 mx-auto" 
+                    class="py-0 pl-0 pr-2 mx-auto"
                     type="heading"
                     color="surface-2"
                   />
@@ -196,7 +196,7 @@ export default {
   },
   async created() {
     await this.gameListStore.requestGameList();
-    this.loadingData = false;    
+    this.loadingData = false;
   },
   methods: {
     clearSnackBar() {
@@ -212,19 +212,6 @@ export default {
       this.showSnackBar = true;
       this.snackBarMessage = message;
       this.showCreateGameDialog = false;
-    },
-    logout() {
-      this.gameListStore
-        .requestLogout()
-        .then(() => {
-          this.$router.push('/login');
-        })
-        .catch((err) => {
-          if (err) {
-            console.error(err);
-          }
-          console.log('Error logging out');
-        });
     },
   },
 };

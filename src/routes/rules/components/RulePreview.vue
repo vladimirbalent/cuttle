@@ -26,7 +26,7 @@
       {{ description }}
     </p>
     <div class="d-flex justify-center">
-      <v-btn :color="buttonColor" variant="outlined" @click="toggleAnimate">
+      <v-btn :color="buttonColor" variant="outlined" @click="toggleAnimate" data-cy="rule-preview-button">
         <v-icon :icon="buttonIcon" />
         {{ buttonText }}
       </v-btn>

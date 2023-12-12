@@ -77,6 +77,14 @@ describe('Stats Page Error States', () => {
 describe('Stats Page', () => {
   beforeEach(setup);
 
+  it('Test how are ranks determined dialog close', () => {
+    cy.get('[data-cy=ranked-info-button]').click();
+    cy.get('[data-cy=ranked-info-close-button]').should('be.visible');
+
+    cy.get('[data-cy=ranked-info-close-button]').click();
+    cy.get('[data-cy=ranked-info-close-button]').should('not.be.visible');
+  });
+
   it('Displays Headers, Cards, and Table', () => {
     const [seasonOne] = seasonFixtures;
     cy.get('[data-cy=selected-season-header]');

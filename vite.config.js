@@ -1,5 +1,6 @@
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import istanbul from "vite-plugin-istanbul";
 
 // vite.config.js
 import { defineConfig, loadEnv } from 'vite';
@@ -29,6 +30,13 @@ export default defineConfig(({ mode }) => {
       vuetify({
         autoImport: false,
         styles: { configFile: 'src/sass/variables.scss' },
+      }),
+      istanbul({
+        include: ['src/*', 'api/*'],
+        exclude: ['node_modules', 'test/', '.github', '.husky', '.nyc_output', '.storybook', '.tmp', '.vscode', 'config', 'coverage', 'cypress', 'docker', 'docs', 'public', 'tests', 'tools'],
+        extension: [ '.js', '.ts', '.vue' ],
+        cypress: true,
+        requireEnv: false,
       }),
     ],
     resolve: {

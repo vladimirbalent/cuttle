@@ -51,7 +51,6 @@ export const useAuthStore = defineStore('auth', {
     requestReauthenticate({ username, password }) {
       return new Promise((resolve, reject) => {
         // Assume successful login - cancel upon error
-        this.authSuccess(username);
         io.socket.get(
           '/user/reLogin',
           {
@@ -60,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
           },
           (res, jwres) => {
             if (jwres.statusCode === 200) {
+              this.authSuccess(username);
               const gameStore = useGameStore();
               this.mustReauthenticate = false;
               const pNum = res.pNum ?? getPlayerPnumByUsername(gameStore.players, this.username);

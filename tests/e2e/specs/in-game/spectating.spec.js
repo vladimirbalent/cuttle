@@ -449,4 +449,67 @@ describe('Creating And Updating Unranked Matches With Rematch - Spectating', () 
       .should('contain', 'myUsername')
       .should('contain', playerThree.username);
   });
+
+  it('Spectate unranked games with rematch, game ID undefined', function () {
+    // 1st game: Opponent concedes
+    cy.recoverSessionOpponent(playerTwo);
+    cy.concedeOpponent();
+
+    assertVictory();
+    cy.log('rematch player2');
+
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          cy.rematchOpponent({ gameId: game.id, rematch: true });
+        });
+
+    cy.get('[data-cy="opponent-wants-rematch"]').should('be.visible');
+
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          cy.expect(game.p0Rematch).to.be.null;
+          cy.expect(game.p1Rematch).to.be.true;
+        });
+
+    cy.recoverSessionOpponent(playerOne);
+
+    cy.wait(1000);
+
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          cy.rematchOpponent({ gameId: game.id, rematch: true });
+        });
+    cy.wait(1000);
+
+    cy.window()
+        .its('cuttle.gameStore')
+        .then((game) => {
+          // new game, so rematch is null
+          cy.expect(game.p0Rematch).to.be.null;
+          cy.expect(game.p1Rematch).to.be.null;
+        });
+
+    cy.log('join rematch player 1');
+
+    cy.url().then((url) => {
+      cy.vueRoute(`/`);
+      const oldGameId = url.split('/').pop();
+      cy.joinRematchOpponent({ oldGameId });
+
+      cy.log('recover player 2');
+      cy.recoverSessionOpponent(playerTwo);
+      cy.log('join rematch player 2');
+
+      cy.window()
+          .its('cuttle.gameStore')
+          .then((game) => {
+            cy.vueRoute(`/rematch/${oldGameId}`);
+            game.isSpectating = true;
+            game.id = null;
+          });
+    });
+  });
 });

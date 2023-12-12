@@ -209,11 +209,11 @@ export default {
           this.loadingData = false;
           return;
         }
-     
+
         this.selectedSeason = { ...requestedSeason, gameCounts, rankings, uniquePlayersPerWeek };
         this.loadingData = false;
       });
-      
+
     },
   },
 };

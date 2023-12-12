@@ -8,6 +8,11 @@ module.exports = defineConfig({
     specPattern: ['tests/e2e/specs/**/*.spec.js'],
     excludeSpecPattern: ['tests/e2e/specs/playground.spec.js'],
     supportFile: 'tests/e2e/support/index.js',
+    setupNodeEvents(on, config) {
+      require('@cypress/code-coverage/task')(on, config);
+
+      return config;
+    },
   },
   // Retry tests 2 times headlessly, no retries in UI
   retries: {

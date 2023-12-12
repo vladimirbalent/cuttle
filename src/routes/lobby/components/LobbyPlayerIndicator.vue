@@ -2,16 +2,18 @@
   <Transition name="cards" mode="out-in">
     <div v-if="playerUsername" class="player-card">
       <span class="player-name">{{ playerUsername }}</span>
-      <div class="card-container" data-cy="lobby-card-container" :class="{ 'ready' : playerReady }">
+      <div class="card-container">
         <img
           src="/img/cards/card-ready.png"
           class="card-front"
+          :class="{ 'ready': playerReady }"
           alt="card front"
           data-cy="lobby-ready-card"
         >
         <img
           src="/img/cards/card-back.png"
           class="card-back"
+          :class="{ 'ready': playerReady }"
           alt="card back"
           data-cy="lobby-back-card"
         >
@@ -55,12 +57,6 @@ export default {
     playerPadding() {
       return this.$vuetify.display.mdAndUp ? '72px' : '32px';
     },
-    readyFontSize() {
-      return this.$vuetify.display.mdAndUp ? '1.5em' : '1.15em';
-    },
-    readyPadding() {
-      return this.$vuetify.display.mdAndUp ? '8px' : '4px';
-    },
   },
 };
 </script>
@@ -73,6 +69,7 @@ export default {
   perspective: 1200px;
   position: relative;
 }
+
 .card-container img {
   width: 100%;
   height: 100%;
@@ -86,18 +83,15 @@ export default {
 .card-back {
   z-index: -1;
 }
-
-.card-container .card-front {
-  rotate: y -180deg;
+.card-front.ready,
+.card-back {
+  transform: rotateY(0deg);
 }
-
-.card-container.ready .card-front,
-.card-container .card-back {
-  rotate: y 0deg;
+.card-front {
+  transform: rotateY(-180deg);
 }
-
-.card-container.ready .card-back {
-  rotate: y 180deg;
+.card-back.ready {
+  transform: rotateY(180deg);
 }
 
 .player-card {

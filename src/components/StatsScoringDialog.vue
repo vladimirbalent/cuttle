@@ -81,7 +81,7 @@
       <!-- Actions -->
     </template>
     <template #actions>
-      <v-btn variant="outlined" color="surface-1" @click="show = false">
+      <v-btn variant="outlined" color="surface-1" data-cy="ranked-info-close-button" @click="show = false">
         Got It!
       </v-btn>
     </template>

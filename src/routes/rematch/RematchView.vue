@@ -67,7 +67,7 @@ export default {
     ...mapStores(useGameStore, useAuthStore),
     myPNum() {
       return this.gameStore.myPNum;
-    },  
+    },
     mustReauthenticate: {
       get() {
         return this.authStore.mustReauthenticate;
@@ -82,18 +82,18 @@ export default {
   },
 
   async mounted() {
-    if (this.isSpectating && !this.gameStore.id) {
+    if (this.gameStore.isSpectating && !this.gameStore.id) {
       let { gameId } = this.$router.currentRoute.value.params;
       gameId = Number(gameId);
       if (!Number.isInteger(gameId)) {
         this.$router.push(ROUTE_NAME_HOME);
         return;
       }
-      this.gameStore.requestSpectate(gameId);
+      this.gameStore.requestSpectate(gameId)
     }
 
     if (!this.authStore.authenticated) {
-      this.authStore.mustReauthenticate = true;
+      this.mustReauthenticate = true;
     }
     document.documentElement.style.setProperty('--browserHeight', `${window.innerHeight / 100}px`);
     window.addEventListener('resize', () => {
